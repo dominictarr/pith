@@ -102,7 +102,13 @@ var giantmonad = {
   children:[
     {
       l:21,
-      func: function (){}
+      func: function (){},
+      children:[
+        {
+          func: function (){},
+          l:30
+        }
+      ]
     },
     {
       l:22,
@@ -124,36 +130,89 @@ var gmproc = {
   _noStrict: true,
   func: function(tree,dagdoc){
     var rooto = o()
-//    rooto([tree.id])
-    function recurse (subtree,parento){
+//    rooto([[],tree])
+    function recurse (subtree,parento,parentncbo,diffroot){
       var reto = o()
-      reto([[],[]])
+      var ncbo = o()
+      ncbo(false)
+      reto([[],subtree])
       console.log("new" + subtree.id)
-      return subtree.state.children ?
-        (reto([subtree.state.children
+//      return /*false &&*/ subtree.state.children && subtree.state.children.length ?
+      var thechildren = diffroot ? subtree.state.children : subtree.state.children
+      if(!(subtree.state.children && subtree.state.children.length)) return reto
+      reto([thechildren
           .map(function(id){
             var child = dagdoc.get(id)
             child.revved.once('add',function(row){//as is, not necessarily the most recent rev, hmm
               var news = subtree.insertChildren([[subtree.state.children.indexOf(id),1,row.id]])
+              var temp
+              if(parentncbo()) //if this is the(/a) root
+            {
+              console.log("happening" + subtree.id)
+              var newncbo
+              parento(recurse(parento()[1]/*old subtree.state.children o's*/,parento,(newncbo = o(),newncbo(true),ncbo),news))
+              //[(temp = parento()[0].slice(), temp.splice(parento()[1].state.children.indexOf(id),1,
+            }
+
+              return
+//              console.log(recurse(row,o())()[0][0]())
+//              var pos = parento
+              //parentncbo(recurse(row,ncbo)()[0][0]())
+              var triggersig
+              if(ncbo() === "falsey") (console.log("bbbb"),parentncbo(triggersig = o())) //save var by calling parent to fork below
+              else parentncbo(ncbo())
+              console.log(parentncbo())
+              var theone
+              if(parentncbo())
+                (console.log("i am the one..." + subtree.id),theone = true)
+//              console.log(parento())             
+              ncbo(recurse(row,reto,ncbo))            
+              ncbo(function(debugStr){parento();console.log("asda" + debugStr)})             
+              var news = subtree.insertChildren([[subtree.state.children.indexOf(id),1,row.id]])
+              console.log("child " + id + " of parent " +subtree.id + " (pos:"+subtree.state.children.indexOf(id)+") replaced by " +row.id + " recorded in "+ news.id)
+              if(theone)
+                console.log("Aaaaaa"+subtree.id)//triggersig("ACTIVATE!")
+              return
+
+
+
+
+
               //need to recurse again!!
-              var pos = subtree.state.children.indexOf(id)
+//              console.log(parento()[1].state.children)
+              var pos = parento()[1].state.children.indexOf(id)
+              var posold = subtree.state.children.indexOf(id)
               console.log(subtree.state.children)
-              console.log(pos + " " + row.id + " " + id)
-              console.log("child " + id + " of parent " +subtree.id + " replaced by " +news.id)
+  console.log(parento()[0].map(function(o){return o()[1].id}))//state)
+              console.log("child " + id + " of parent " +subtree.id + " (pos:"+posold+") replaced by " +row.id + " recorded in "+ news.id)
+//              console.log(parento())
 //              console.log(subtree.state.children)
               var revoo = parento()[0].slice() //possibly don't need to slice()
-              var revoc = parento()[1].slice()//subtree.state.children.slice()
+//              var revoo =               
+              //set reto to news? --- probably shouldn't, GC it, as below
+//              parento(/*[recurse(news,reto),news])*/[(revoo.splice(pos,1,recurse(news,reto/*def!!!*/)),revoo),/*parento()[1]*/news]) //NO, *I* don't want to update it with the latest, it is my child's reponsibility
+//              parento([revoo,news])
+              parento(/*[recurse(news,reto),news])*/[(revoo.splice(pos,1,recurse(row,reto/*def!!!*/)),revoo),/*parento()[1]*/news]) //NO, *I* don't want to update it with the latest, it is my child's reponsibility
+              console.log(parento())
+  console.log(parento()[0].map(function(o){return o()[1].id}))//state)
+              if(news.state.children)
+                true //do recurse somehow
+              //GC old reto?
+//              var revoc = parento()[1].slice()//subtree.state.children.slice()
 
-              parento([(revoo.splice(pos,1,recurse(news,parento)),revoo),/*could use parento again to make consistent*/(revoc.splice(pos,1,row.id),revoc)])
+//              parento([(revoo.splice(pos,1,recurse(news,parento)),revoo),/*could use parento again to make consistent*/(revoc.splice(pos,1,row.id),revoc)])
               //console.log(parento())
               //subtree.insertChildren([[subtree.state.children.indexOf(id),1,row.id]])
             })
             return child
           })
-          .map(function(){return recurse(arguments[0],reto)}),subtree.state.children]), reto)
-        : reto
+          .map(function(){return recurse(arguments[0],reto,ncbo)}),subtree])
+          return reto
+        
     }
-    return (rooto([[recurse(tree,rooto)],[tree.id]]),rooto)
+//    return rooto/*???*/ = recurse(tree,rooto)///*recurse(tree,rooto)/*/(rooto([[recurse(tree,rooto)],tree]),rooto)
+    var ncbo  
+    return (rooto(recurse(tree,rooto,(ncbo = o(),ncbo(true),ncbo))()),rooto)
   }
 }
 
@@ -161,9 +220,10 @@ var gmproc = {
 
 var rootstate = []//thislevel, childobjs
 function drawRecurse(sig){
-  if(!sig[0].length) return
-  //console.log(sig)
-  console.log(sig[1])
+//  if(!sig[0].length) return
+  console.log(sig[1].id)
+  console.log(sig[0])
+  console.log(sig[0].map(function(o){return o()[1].id}))//state)
   sig[0].map(function(o){drawRecurse(o())})
   //console.log(sig[1][0])
 }
@@ -172,4 +232,5 @@ var gmsig = A.addJSONAtom(gmproc).func(gm,A)
 gmsig(function(){console.log("-------");drawRecurse(arguments[0])})
 //gmsig(function(){console.log(A.get(arguments[0]))})
 A.get(A.get(gm.state.children[1]).state.children[0]).insertChildren([[0,0,{a:6}]])//.insertChildren([[0,0,{b:6}]])
+gmsig(function(){console.log("-------result");drawRecurse(arguments[0])})
 //console.log(A.rows)
