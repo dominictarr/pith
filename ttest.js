@@ -88,12 +88,12 @@ var addDAGobj = {
   ]
     
 }
-//var newDAG = A.addJSONAtom(addDAGobj)
+var newDAG = A.addJSONAtom(addDAGobj)
 var o = require('observable')
 var v = o()
 v(1)
 setInterval(function () {if(v()>20)return;v(v() + 1)}, 500)
-//newDAG.func(v)
+newDAG.func(v)
 
 
 var giantmonad = {
@@ -149,31 +149,10 @@ var gmproc = {
       reto([thechildren
         .map(function(id,index){
             var child = dagdoc.get(id)
-//            if(diffroot && (index != diffpos))
-//              return parento()[0][index]//observe from parento()
-//            console.log(id + "v")
-            child.revved.removeAllListeners('add') //UGLY - results from having the diffpos return below
-//            console.log(child.revved.listeners('add'))
-    //           console.log(parento())           
-            child.revved.once('add',function(row){//as is, not necessarily the most recent rev, hmm
-              var news = subtree.insertChildren([[subtree.state.children.indexOf(id),1,row.id]])
-              console.log("new stuff "+row.id+ " replacing " + subtree.id + " recorded in "+news.id)
-              var temp
-              if(parentncbo()) //if this is the(/a) root
-              {
-                var newncbo
-                parento(recurse(news,parento,parentncbo,news,parento())())
-              }
+            child.revved.on('add',function(row){//as is, not necessarily the most recent rev, hmm
 
               return
             })
-            if(diffroot && (index != diffpos))
-              return parento()[0][index]//observe from parento()
-            if(diffroot)
-            {console.log(index + " " + diffpos)
-//              console.log(parento()[0])
-              return recurse(dagdoc.get(id),reto,ncbo)//,parento()[0][index]()[1])
-            }
             return recurse(dagdoc.get(id),reto,ncbo)
        }),subtree])
        return reto
@@ -200,7 +179,7 @@ var gmsig = A.addJSONAtom(gmproc).func(gm,A)
 gmsig(function(){console.log("-------");drawRecurse(arguments[0])})
 //gmsig(function(){console.log(A.get(arguments[0]))})
 var thing = A.get(A.get(gm.state.children[1]).state.children[0]).insertChildren([[0,0,{a:6}]]).insertChildren([[0,0,{b:6}]])
-console.log(gm.revved._array.splice(-1)[0].state.children[1] + "affffff")
+//console.log(gm.revved._array.splice(-1)[0].state.children[1] + "affffff")
 //A.get(gm.revved._array.splice(-1)[0].state.children[0]).insertChildren([[0,0,{asf:4}]])
 //console.log(gm.revved._array.splice(-1)[0].insertChildren([[0,0,{dddd:223}]]))
 //gmsig(function(){console.log("-------result");drawRecurse(arguments[0])})
