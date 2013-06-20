@@ -26,6 +26,14 @@ var inputs = {}
 entry.func(inputs, window, A)
 //  //no scrolling!   //It's much nicer to just resize the textarea to fit
 //  // beefy zui.js --live --open --debug=false -- --fast --noparse=three.min.js
+//  var flipcounter = require('flip-counter');
+//
+//  var div = document.createElement('div');
+//  div.className = 'flip-counter';
+//
+//  var counter = flipcounter(div, {
+//      value: 3
+//      })
 
 var zen
 
