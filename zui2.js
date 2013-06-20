@@ -8,10 +8,21 @@ var DAGDoc = pith.DAGDoc
 var key = require('keymaster')
 //:%!xclip -sel clip
 //u
-
+//being able to get information customers is important, without taking advantage of confidentiality challenge)
 var A = new DAGDoc()
+window.A = A
+window.selObj = selObj
+var testTree = A.addJSONAtom({
+  title:"asfasfdasfd",
+  children:[
+    {
+      title:"aaasaaaa",
+      children:[{title:"me",children:[]},{title:"too",children:[]}]
+    }
+  ]
+})
 
-var helpers = A.addJSONAtom({
+/*var helpers = A.addJSONAtom({
 
 })
 
@@ -19,11 +30,13 @@ var entry = A.addJSONAtom({
     func: function(inputs, window, dd) {
         console.log(window)
     }
-})
+})*/
 
 var inputs = {}
 
-entry.func(inputs, window, A)
+//entry.func(inputs, window, A)
+
+
 //  //no scrolling!   //It's much nicer to just resize the textarea to fit
 //  // beefy zui.js --live --open --debug=false -- --fast --noparse=three.min.js
 //  var flipcounter = require('flip-counter');
@@ -59,16 +72,10 @@ var zen
             targetRotation.set(0, 0, 0)
             node.localDepth = null;
 
-
             if (node.target) {
-
-
                 targetPosition = node.target.position;
                 node.target.position.x = -10000
                 node.target.position.z = 10000
-                // node.target.position.y = node.target.position.y + (node.target.position.y - params.cameraY)*6;
-
-
             }
             node.target = {
                 "position": targetPosition,
@@ -84,34 +91,11 @@ var zen
                 node.activeLocal = true;
                 tempdepth = node.localDepth = node.depth - params.localRoot.depth;
                 radFOV = params.fov * Math.PI / 180;
-                /*angleA = params.xdist[tempdepth*2+1]/params.visWidth * radFOV;
-                                                                                      gapAngleA = params.xdist[tempdepth*2]/params.visWidth * radFOV;*/
-
-
                 xoffset = 0 //-params.visWidth/2
-                //console.log(xoffset)
-
                 //yoffset needs to be calculated OUTSIDE OF THIS RECURSION.. ie. down the bottom ;D
                 yoffset = 0
                 if (node.object) //subsequent to initial traverse
                 {
-                    //if(!params.backingUp/* && params.ghostObj == null*/)
-                    /*{
-                                                                                                                                            if(params.newSelObj == params.localRoot.children[0])
-                                                                                                                                                                yoffset = theLocalRoot.object.position.y//this is the current / stale position, the new target isn't calculated yet
-                                                                                                                                                                                else //using .last
-                                                                                                                                                                                                {
-                                                                                                                                                                                                                    childpos = params.localRoot.children.indexOf(params.newSelObj)
-                                                                                                                                                                                                                                        console.log(childpos)
-                                                                                                                                                                                                                                                            if(childpos > 0)
-                                                                                                                                                                                                                                                                                    yoffset = theLocalRoot.object.position.y// + theLocalRoot.crappyYHackNeedToMoveThisLogicToTheParentleftOverYDiv*childpos + node.d3parent.crappyYHackNeedToMoveThisLogicToTheParentminiHeight
-                                                                                                                                                                                                                                                                                                        else //it's not a direct nav using .last ...probably a random click on somewhere nested deep
-                                                                                                                                                                                                                                                                                                                                yoffset = theLocalRoot.object.position.y
-                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                                                        else if(params.backingUp)//to compensate for going backwards
-                                                                                                                                                                                                                                                                                                                                                                                    {*/
                     c = params.oldCamObj
                     s = params.newSelObj
                     sd3p = s.d3parent
@@ -119,27 +103,11 @@ var zen
                     schildn = sd3p.d3children.indexOf(s)
 
                     if (c.d3parent.d3children.length > 1) {
-                        //dear GOD this took a while!
-                        //yoffset = (c.object.position.y-cd3p.children[0].object.position.y) - ((cd3p.children[1].object.position.y-cd3p.children[0].object.position.y)*schildn)// - params.oldLocalRoot.position.y// theLocalRoot.object.position.y
                         yoffset = (c.object.position.y /*-cd3p.children[0].object.position.y*/ ) - ((cd3p.d3children[1].object.position.y - cd3p.d3children[0].object.position.y) * schildn) // - params.oldLocalRoot.position.y// theLocalRoot.object.position.y                    
-                        //console.log((c.object.position.y-cd3p.children[0].object.position.y) + " " + ((cd3p.children[1].object.position.y-cd3p.children[0].object.position.y)*schildn))
                     } else if (c.d3parent.d3children.length == 1) {
                         yoffset = c.object.position.y - c.backupyinterval * schildn
-                        //console.log(params.oldCamObj.object.position.y + " " + params.oldCamObj.object.position.y)
                     } else
                         yoffset = theLocalRoot.object.position.y
-                        // else stay 0 !                    
-                        //}
-                        /*else if(params.ghostObj != null)
-                                                                                                                                                                                                {
-                                                                                                                                                                                                                //console.log(params.ghostObj.object.position.y )
-                                                                                                                                                                                                                                
-                                                                                                                                                                                                                                yoffset = params.ghostObj.object.position.y             
-                                                                                                                                                                                                                                            }  */
-
-
-                    //else
-                    //    console.log("this should NEVER be happening")          
                 }
                 prevXDist = 0;
                 for (i = 0; i < tempdepth * 2 + 1; i++) {
@@ -149,45 +117,20 @@ var zen
 
                 if (tempdepth * 2 + 1 > params.xdist.length) {
                     prevXDist *= 1.5 //arbitrary
-                    //xoffset = 10000000
                     actualWidth = 0.0001 //this ultimately needs to be in ADDITION to toggling visibility
-                    //zoffset = 100000000
                     //need to handle these values in a different way!!!
                 }
-                //console.log(prevXDist)
-
-
-                /*prevAngle = prevXDist / params.visWidth * radFOV + (Math.PI-radFOV)/2
-                                                                                                                                        
-                                                                                                                                        if(tempdepth) //>0
-                                                                                                                                                    hyp = params.nodeWidth / Math.sin(angleA) * Math.sin(prevAngle + gapAngleA)
-                                                                                                                                                              else //0
-                                                                                                                                                                          hyp = params.nodeWidth*0.3 / Math.sin(angleA) * Math.sin(prevAngle + gapAngleA)//0.3 is arbitrary
-
-                                                                                                                                                                                    z = -Math.cos((prevAngle + gapAngleA + angleA)-Math.PI/2) * hyp;
-                                                                                                                                                                                              x = Math.sin((prevAngle + gapAngleA + angleA)-Math.PI/2) * hyp - params.nodeWidth/2;*/
-
-                //actualWidth = params.xdist[tempdepth*2+1]// * params.visWidth;
                 node.target.scale.x = node.target.scale.y = actualWidth / params.nodeWidth;
                 zDynOffset = -params.visWidth / Math.tan(radFOV / 2);
                 //      ...i don't want to be calculating all these values all of the time, because they're always the same, it's as if i need a global calculation bit, and then have parents store the calcs for their children
-                //z = tempdepth * 5 + zDynOffset;
                 x = prevXDist + 0.5 * actualWidth + xoffset;
-
                 node.actualWidth = actualWidth
-
-
-                //depth1pxHeight = 1000/1.618//params.xdist[3] / 1.618       //* 2;//hack
-
 
                 if (tempdepth < 1) {
                     node.target.position.x = -10000
                     node.target.position.y = 0
-                    //node.target.position.z = 0
                 } else if (tempdepth == 1) {
                     node.target.position.x = x
-                    //node.target.position.y = (-0.5*(node.parent.d3children.length-1) + node.parent.d3children.indexOf(node))*1000//need to increment number through recursion            
-                    //node.target.position.y = -node.d3parent.d3children.indexOf(node)*(params.nodeHeight+params.depth1pxYGap)
                     miniHeight = params.nodeHeight * (actualWidth / params.nodeWidth);
                     node.target.position.y = -node.d3parent.d3children.indexOf(node) * (miniHeight + params.depth1pxYGap)
                     node.backupyinterval = -1 * (miniHeight + params.depth1pxYGap) //definitely needs moving outta here!!!
@@ -198,33 +141,23 @@ var zen
                 } else if (tempdepth > 1 && (tempdepth * 2 + 1) < params.xdist.length) {
                     node.target.visible = true
                     node.target.position.x = x
-                    //depth2YHeightMultiplier = z / (node.d3parent.target.position.z-zoffset);
                     depth2YHeightMultiplier = 1
                     maxTotalDepth2Height = node.d3parent.target.scale.y * params.nodeHeight // * (actualWidth / params.nodeWidth);//*depth2YHeightMultiplier;       //isn't as big as it perhaps ought to be! (...needs investigating) 
                     miniHeight = params.nodeHeight * (actualWidth / params.nodeWidth);
                     if (!node.d3parent.childLayoutCalculated) {
-
                         function calcFlatYHeight() { //depth2
-                            //params.xdist[5] / 1.618 
-
                             //could plus the margins, mayhaps
                             return node.d3parent.d3children.length * miniHeight //params.nodeHeight;
-                        };
-
+                        }
 
                         if (calcFlatYHeight() > maxTotalDepth2Height)
                             node.d3parent.childrenAreStacked = true;
                         else
                             node.d3parent.childrenAreStacked = false;
-                        //console.log(calcFlatYHeight() + " " + maxTotalDepth2Height)
                         node.d3parent.childLayoutCalculated = true;
                     }
-
-
                     offsetYToDepth1 = (node.d3parent.target.position.y - yoffset) - maxTotalDepth2Height / 2
-
                     //need to use increment indexOf number rather than do actual indexOf lookups
-
                     function calcStackedYZ() {
                         retYZ = {
                             "y": null,
@@ -233,14 +166,10 @@ var zen
                         }
                         //to find the OPPOSITE // Math.tan(Math.PI/2 - prevAngle)*z
 
-                        //offsetYToDepth1 = node.d3parent.target.position.y*depth2YHeightMultiplier - maxTotalDepth2Height/2//params.nodeHeight*(node.d3parent.d3children.length)/2
-                        //leftOverYDiv = (maxTotalDepth2Height - params.nodeHeight)/(node.d3parent.d3children.length)
                         leftOverYDiv = (maxTotalDepth2Height - miniHeight) / (node.d3parent.d3children.length + 1)
                         retYZ.y = offsetYToDepth1 + leftOverYDiv * ((node.d3parent.d3children.length - (node.d3parent.d3children.indexOf(node)))) + miniHeight / 2 //- maxTotalDepth2Height/2//+ miniHeight/2
                         node.d3parent.crappyYHackNeedToMoveThisLogicToTheParentleftOverYDiv = leftOverYDiv
                         node.d3parent.crappyYHackNeedToMoveThisLogicToTheParentminiHeight = miniHeight / 2
-                        //console.log(offsetYToDepth1 + " " + leftOverYDiv + " " + maxTotalDepth2Height)
-                        //retYZ.z = z - (node.d3parent.d3children.length - node.d3parent.d3children.indexOf(node))*5//-5000 //need to wedge depth into allocated divisions by parent z depth range
                         retYZ.z = (node.d3parent.target.position.z - zDynOffset - zoffset) - (node.d3parent.zDepthSubRange / params.zDepthFactor) * (node.d3parent.d3children.length - node.d3parent.d3children.indexOf(node)) / node.d3parent.d3children.length + zDynOffset
                         retYZ.zrange = node.d3parent.zDepthSubRange / (1 - params.zDepthFactor)
                         return retYZ;
@@ -253,11 +182,8 @@ var zen
                             "zrange": null
                         }
 
-                        //offsetYToDepth1 = node.d3parent.target.position.y*depth2YHeightMultiplier - maxTotalDepth2Height/2//1.4  //HACK! should be /2 //- params.nodeHeight*(node.d3parent.d3children.length)/2      
                         leftOverYGapDiv = (maxTotalDepth2Height - miniHeight * (node.d3parent.d3children.length)) / (node.d3parent.d3children.length + 1)
-                        //console.log(offsetYToDepth1 + " " + leftOverYGapDiv + " " + maxTotalDepth2Height)
                         retYZ.y = offsetYToDepth1 + (miniHeight + leftOverYGapDiv) * ((node.d3parent.d3children.length - node.d3parent.d3children.indexOf(node))) - miniHeight / 2
-                        //retYZ.z = z - node.d3parent.d3children.indexOf(node)*5
                         retYZ.z = (node.d3parent.target.position.z - zDynOffset - zoffset) - node.d3parent.zDepthSubRange / params.zDepthFactor + zDynOffset
                         retYZ.zrange = node.d3parent.zDepthSubRange / (1 - params.zDepthFactor)
                         return retYZ;
@@ -280,8 +206,6 @@ var zen
 
                     //TODO - no idea how this really works still
                 }
-
-                //node.target.position.x += xoffset
 
                 node.target.position.y += yoffset
                 node.target.position.z += zoffset + 0.001 * (Math.random() + 1)
@@ -354,11 +278,6 @@ var zen
             });
         }));
     }
-
-
-
-
-
 
     d3_layout_hierarchy2 = function() {
         function recurse(data, depth, nodes) {
@@ -467,8 +386,6 @@ var zen
                 return [];
         }
 
-
-
         switch (d.nodeView) {
             case 1: //tags
                 return d.tags;
@@ -532,50 +449,17 @@ var zen2
 //UI needs to indicate change, but not automatically reprocess!
 //trigger check changes before using the kernel, and don't modify a changed node without reprocessing first
 
-//var opts = $.extend({}, defaults, opts); a neat way of processing function options // have a "default" object within the function 
-//all functions have an arguments array, can only use length though    
-/*define('js/app',[
-        'jquery',
-            'underscore',
-                'handlebars',
-                    'couchr',
-                        'garden-app-support',
-                            'hbt!templates/test',
-                                'hbt!templates/all_doc',
-                                    'js/acorn',
-                                        'd3',
-                                            'keymaster'
-                                            ],
-                                            function($, _, handlebars, couchr, garden, greeting_t, list_t, acorn, d3, keymaster){*/
 var exports = {};
 
-/**
- * This is where you will put things you can do before the dom is loaded.
- */
 exports.init = function() {}
 
-/**
- * This that occur after the dom has loaded.
- */
 exports.on_dom_ready = function(cb) {
-    /*acorn.init({
-                                                                                  "author":"jeremy",
-                                                                                              "activervsID":"ReMapOne"
-                                                                                                      });*/
     kernel = acorn.use('master');
     kernel.loadTree("max", false, function(err, response) {
         init()
         animate()
         return //window.init()
     });
-    /*garden.get_garden_ctx(function(err, garden_ctx){
-                                                                                                  $('.main').append(greeting_t(garden_ctx));
-                                                                                                          });
-
-                                                                                                                  couchr.get('_db/_all_docs', function (err, resp) {
-                                                                                                                              $('.main').append(list_t(resp));
-                                                                                                                                      });*/
-
 }
 
 
@@ -654,24 +538,15 @@ function init() {
     lookeyHere.y = 0;
     lookeyHere.z = 10000 //1000;
     camera.lookAt(lookeyHere);
+    //can add canvas rendered behind!!! view-source:http://mrdoob.github.com/three.js/examples/css3d_sandbox.html
+
 
     scene = new THREE.Scene();
     globalDuration = 200 //or 0 for massively responsive design ;)
 
-    //can add canvas rendered behind!!! view-source:http://mrdoob.github.com/three.js/examples/css3d_sandbox.html
-    /*geometry = new THREE.CubeGeometry( 2000, 2000, 2000 );
-                                                                                                                                                                                                                                                                                                                                material = new THREE.MeshBasicMaterial( { color: 0xFFFFFF, wireframe: true, wireframeLinewidth: 100 } );
-
-                                                                                                                                                                                                                                                                                                                                        mesh = new THREE.Mesh( geometry, material );
-                                                                                                                                                                                                                                                                                                                                                scene.add( mesh );*/
-
-
     currobject = kernel.root.children[0]; //scene.position; //this needs thinking about
     selObj = kernel.root.children[0];
-
     currrroot = kernel.root;
-
-
 
     columnProportions = [-0.06, //gap then angle
         0.801, //0.000000001,//
@@ -725,10 +600,6 @@ function init() {
     thedata = treeNav.nodes(kernel.root)
 
     thisIsNotForDOM = document.createElement('div');
-    //d3.select(thisIsNotForDOM).attr("id","thisIsNotForDOM").attr("style","display:none;");
-    //document.getElementsByTagName('body')[0].appendChild(thisIsNotForDOM);
-
-
     //need this code to evaluate every transform2
     //d3.select(thisIsNotForDOM).selectAll("div").each(function(d,i){return; var togglevisibilityhere;})
 
@@ -737,7 +608,6 @@ function init() {
 
 
     function IORedraw() {
-        //need this code in an IO redraw function
         asdf = d3.select(thisIsNotForDOM).selectAll("div").data(thedata = treeNav.nodes(kernel.root) /*thedata*/ , function(d) {
             return d.id
         })
@@ -752,7 +622,6 @@ function init() {
             .attr("style", function(d, i) {
                 thedata[i].element = this; //this stuff shouldn't really be *here* but oh well
                 var object = new THREE.CSS3DObject(this);
-                //object.__dirtyPosition = true;
                 object.position.x = Math.random() * 4000 - 2000;
                 object.position.y = Math.random() * 4000 - 2000;
                 object.position.z = Math.random() * 4000 - 2000;
@@ -767,7 +636,6 @@ function init() {
 
                 objects.push(object);
 
-                console.log("new entry")
                 ////height = d.dx * ky * 0.95;
                 //width = kx/10//d.dy * kx;
                 //return 'width:'+ width  +'px;'+//tempwidth=... return tempwidth > 0 ? tempwidth : 0;// 'background-color:rgba(0,127,127,' + /*( Math.random() * 0.5 + 0.25 )  '0.25' + ');' +
@@ -807,83 +675,18 @@ function init() {
 
         //put in a template to add controls on the nodes//not controls, just info!!!
         //info bar along the bottom
-
     }
-
-
-    // helix
-
-    /*var vector = new THREE.Vector3();
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    for ( var i = 0, l = objects.length; i < l; i ++ ) {
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              var object = objects[ i ];
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        var phi = i * 0.175 + Math.PI;
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  var object = new THREE.Object3D();
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            object.position.x = 1100 * Math.sin( phi );
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      object.position.y = - ( i * 8 ) + 450;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                object.position.z = 1100 * Math.cos( phi );
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          vector.copy( object.position );
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    vector.x *= 2;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              vector.z *= 2;
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        object.lookAt( vector );
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  targets.helix.push( object );
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          }
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  // grid
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          for ( var i = 0; i < objects.length; i ++ ) {
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    var object = objects[ i ];
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              var object = new THREE.Object3D();
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        object.position.x = ( ( i % 5 ) * 400 ) - 800;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  object.position.y = ( - ( Math.floor( i / 5 ) % 5 ) * 400 ) + 800;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            object.position.z = ( Math.floor( i / 25 ) ) * 1000 - 2000;
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      targets.grid.push( object );
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              }*/
-
-
-    //
 
     renderer = new THREE.CSS3DRenderer();
     renderer.setSize(winnerWidth(), winnerHeight());
     renderer.domElement.style.position = 'fixed';
     renderer.domElement.style.top = 1;
-    //document.getElementById('container').appendChild(renderer.domElement);
     document.body.appendChild(h('div#container'));
     document.getElementById('container').appendChild(renderer.domElement);
-
-    //
 
     controls = new THREE.TrackballControls(camera, renderer.domElement);
     controls.rotateSpeed = 0.5;
     controls.addEventListener('change', render);
-
-
-    var button = document.getElementById('helix');
-    button.addEventListener('click', function(event) {
-
-        //transform( targets.helix, 2000 );
-
-    }, false);
-
-    var button = document.getElementById('grid');
-    button.addEventListener('click', function(event) {
-
-        //transform( targets.grid, 2000 );
-
-    }, false);
 
     navmodeon = true
 
@@ -891,7 +694,6 @@ function init() {
         key('d, right', function() {
             if (navmodeon) {
                 if (selObj.d3children && selObj.d3children.length > 0) {
-                    //$('#sidebar').css("display", "none");
                     console.log(selObj)
                     selObj.last && selObj.last != selObj ? click(selObj.last) : click(selObj.d3children[0]); //selObj.vischildren ? acorninit(selObj.vischildren[0],false,kernel.subtrees[selObj.vischildren[0].db]) : null;                
                     //possibly need to think about whether .last has any implications when messin around with ghosts
@@ -925,19 +727,12 @@ function init() {
                 });
             return;
 
-            /*kernel.addNode(selObj,{"title":"forever and always"},0,function(retObj){
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          thedata = treeNav.nodes(kernel.root)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      IORedraw();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          //click(retObj);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          })  */
+            /*kernel.addNode(selObj,{"title":"forever and always"},0,function(retObj){IORedraw();click(retObj);})  */
         });
 
     }
     keyboardInit();
-    //transform( targets.helix, 500 );
-
     transform2(0);
-    //
 
     window.addEventListener('resize', onWindowResize, false);
     render();
@@ -947,24 +742,15 @@ function click(d, backingUp, ghostObj) { //neither backingUp or ghostObj are bei
 
     //this is an efficiency to consider....
     /*if(selObj.d3parent == d.d3parent && !(somekindofloadghostorsomethingstaticjusttookplace))
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              selObj = d;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            console.log("asdfasdf")
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                else
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          {*/
+     * selObj = d;
+      else*/
+    
     //if(d.d3parent == selObj.d3parent || d.d3parent == selObj)
     //    tweeningCamera = true;
 
     selObj.d3parent.last = selObj;
     selObj = d;
-    /*if(ghostObj)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              reflow(ghostObj.d3parent, false, ghostObj);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            else if(backingUp)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    reflow(selObj.d3parent, backingUp); 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        else*/
     reflow(selObj.d3parent); //d3ext uses newSelObj (which could equally be passed as a parameter here, to work out the heading right offset (relevant for .last) - not anymore!
-    //}
     render();
 }
 
@@ -1005,36 +791,6 @@ function loadGhost(ghost, callback) {
 
     ghost.skipGhost = true;
     return callback(ghost);
-    /*node = ghost.node;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            if(ghost.ghostType === undefined)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                return callback(-1) // error - though i don't think this code works
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                t = ghost.ghostType;//(ghost == ghost.node.graftGhost) ? 0 : ghost.ghostType;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                t2 = (ghost.ghostParent == node.parent) ? 0 : t;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                t3 = (node.graftParent == node.parent) ? 0 : t;        
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                if(t < 3)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ghostindex = ghost.ghostParent[t2==0?'children':(t2==1?'tags':'tagged')].indexOf(ghost);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        realparent = node.graftParent ? node.graftParent : node.parent;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            realindex = realparent[t3==0?'children':(t3==1?'tags':'tagged')].indexOf(node);    
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ghost = ghost.ghostParent[t2==0?'children':(t2==1?'tags':'tagged')].splice(ghostindex,1)[0];
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    console.log(ghost)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        node = realparent[t3==0?'children':(t3==1?'tags':'tagged')].splice(realindex,1)[0];
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            console.log(node)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                node.graftGhost = ghost;            
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    node.graftParent = ghost.ghostParent;
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ghost.ghostParent[t2==0?'children':(t2==1?'tags':'tagged')].splice(ghostindex,0,node)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ghost.ghostParent = realparent;
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                realparent[t3==0?'children':(t3==1?'tags':'tagged')].splice(realindex,0,ghost);        
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                else if(t == 3)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                {
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                return callback(ghost.node);*/
 };
 
 function resetNode(node, callback) { //regarding Ghosts! these need grouping
@@ -1071,65 +827,23 @@ function transform2(duration) {
             displayToggle = "visible" //"block";
             //displayToggle = true
         } else {
-            /*if(objects[ i ].owningNode.element.style.display == "none")
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              someDuration = 0
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      displayToggle = "none";*/
 
             if (objects[i].owningNode.element.style.visibility == "hidden")
                 someDuration = 0
             displayToggle = "hidden" //"none";
-
-            /*if( objects[ i ].visible == false)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      someDuration = 0
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              displayToggle = false*/
         }
-
-
 
         var object = objects[i];
 
-        //objects[ i ].owningNode.element.style.display = displayToggle;
-
-
-        //var target = targets[ i ];
         var target = object.owningNode.target;
-        //var someDuration = Math.random() * duration + duration;
 
         //                    object.visible = target.visible;// (would ideally like to run this after the onComplete below, needs binding or something though
         //object.visible is NOT implemented in CSS3DRenderer... or something
-
-        //object.position = target.position  
-
 
         //if(!target.visible)
         //  object.parent.__removeObject(object)
         //if object.visible || target.visible
 
-
-
-
-        /*
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          node = object.owningNode
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        function theSamePosition (pos1, pos2)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    if((pos1.x == pos2.x) && (pos1.y == pos2.y) && (pos1.z == pos2.z))
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                return true;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        return false;                               
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                //move object.positions to old target values to compensate for unfinished transitions!!
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    if(!theSamePosition(node.object.position,node.target.position)) //or inTransition??
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        {   
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                node.object.position = node.target.position.clone();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        //node.object.position.x = node.target.position.x
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                //node.object.position.y = node.target.position.y
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        //node.object.position.z = node.target.position.z      
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                node.object.scale = node.target.scale.clone();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        node.object.rotation = node.target.rotation.clone();                                                  
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }*/
-
-
-        //if(!objects[ i ].owningNode.activeLocal)
-        //     continue;
         if (displayToggle == "visible")
             object.owningNode.element.style.visibility = displayToggle;
 
@@ -1138,15 +852,6 @@ function transform2(duration) {
             transform: object.owningNode.element.style.transform,
             owningNode: object.owningNode
         }
-        /*new TWEEN.Tween( false)//object.owningNode.scaleobj )
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      .to( {}, someDuration )
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  .onUpdate(function(scaleobj,blah){
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  //someDuration        
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  console.log(blah)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  n = scaleobj.transform.split("(")[1].split(",")[0]
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  scaleobj.owningNode.element.style.transform = "scale("+n+","+n+")"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              })
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                .start();*/
 
         new TWEEN.Tween(object.position)
             .to({
@@ -1244,34 +949,6 @@ function clipY() {
         //camera.lookAt(currrroot.children[currrroot.children.length-1].object.position);                     
     }
 }
-/*    function transform( targets, duration ) {
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    TWEEN.removeAll();
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            for ( var i = 0; i < objects.length; i ++ ) {
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      var object = objects[ i ];
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                var target = targets[ i ];
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          new TWEEN.Tween( object.position )
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      .to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  .easing( TWEEN.Easing.Exponential.InOut )
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              .start();
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        new TWEEN.Tween( object.rotation )
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    .to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration )
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                .easing( TWEEN.Easing.Exponential.InOut )
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            .start();
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            new TWEEN.Tween( this )
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      .to( {}, duration * 2 )
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                .onUpdate( render )
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          .onComplete( function(){ selObj = kernel.root;render();} )
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    .start();
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          }*/
 
 function onWindowResize() {
 
@@ -1305,12 +982,6 @@ var pparams = []
             //ORRRRR accelerate the old transition and make the two equal the default duration !!
             var param
             camObj = selObj;
-            /*camera.position.x = selObj.object.position.x
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                camera.position.y = selObj.object.position.y
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            camera.position.z = 1200
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        camera.rotation.x -= camera.rotation.x;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    camera.rotation.y -= camera.rotation.y;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                camera.rotation.z -= camera.rotation.z;//*/
 
 
             //currobject.element.className = "element"
@@ -1340,9 +1011,6 @@ var pparams = []
                 var currentPos = lerp(startPos, endPos, param.t);
                 var currentLookAt = lerp(startLookAt, endLookAt, param.t);
                 camera.position.set(currentPos.x, currentPos.y, currentPos.z);
-                //camera.rotation.x -= camera.rotation.x;
-                //camera.rotation.y -= camera.rotation.y;
-                //camera.rotation.z -= camera.rotation.z;
                 currentLookAt = currentPos.clone() //otherwise the camera tilts... but leaving behaviour in for now... for inspiration!!
                 currentLookAt.z = 0;
                 camera.lookAt(currentLookAt);
@@ -1446,11 +1114,7 @@ var pparams = []
     }
 
 
-
-
-    //return exports;
-    //});
-
+var zen3
 
 
     /**
@@ -2545,8 +2209,6 @@ var pparams = []
 THREE.TrackballControls.prototype = Object.create(THREE.EventDispatcher.prototype);
 
 var selObj
-document.body.appendChild(h('button#helix'))
-document.body.appendChild(h('button#grid'))
 var elementz = document.createElement('link');
 elementz.type = 'text/css';
 elementz.rel = 'stylesheet';
@@ -2558,7 +2220,12 @@ elementz2.href = 'http://localhost:8080/css/app2.css'
 document.body.appendChild(elementz)
 acorn = require('./miscjs/acorn.js')()
 kernel = acorn.use('asdf')
-kernel.loadTemp("max", false, function(err, response) {
+kernel.loadDoc && kernel.loadDoc(A, false, function(err, response) {
+    init()
+    animate()
+    return //window.init()
+});
+kernel.loadDoc || kernel.loadTemp("max", false, function(err, response) {
     init()
     animate()
     return //window.init()

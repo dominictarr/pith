@@ -82,10 +82,23 @@ module.exports = function($,couchr,async,events,db){
         return new acorn(url)//((url.substr(0, 1) !== '/' ? '/' : '') + url);
     };
 
+    acorn.prototype.loadDoc = function (doc,nestSubtrees,cb){
+      var thistree = this
+      var fakeRows = []
+      Object.keys(doc.rows).map(function(key){fakeRows.push(doc.rows[key]);doc.rows[key].doc = doc.rows[key].state;/*doc.rows[key].doc.content.children = doc.rows[key].state.children || []*/})
+      doc.rows = fakeRows//.forEach = fakeRows.forEach
+      thistree.buildTree(calcTagged = true, doc, thistree.url, nestSubtrees, function(err,response){
+        if(!err)
+          thistree.root = response;
+        return cb(err,response);
+      })
+    }
+
     acorn.prototype.buildTree = function (calcTagged, data, db, nestSubtrees, callback)
     //originally wanted this to be an export... perhaps should roll into loadTree now
     {
         thistree = this;
+        console.log(data.rows)
         data.rows.forEach(function (row) {
             if(row.id in thistree.docIDToNode)
                 return error.error.error + "ERROR";
@@ -146,7 +159,7 @@ module.exports = function($,couchr,async,events,db){
             //also, i was thinking last night about how nodes are just like portals really
                 node.link = ghostClone(thistree.docIDToNode[node.doc.link],3,node);
             }
-            node.doc.tags.forEach( function (row) {
+            node.doc.tags && node.doc.tags.forEach( function (row) {
                 node.tags.push(ghostClone(thistree.docIDToNode[row],1,node));
             });
             if(calcTagged){//a BIG if
@@ -162,7 +175,7 @@ module.exports = function($,couchr,async,events,db){
         {
             //TODO need to make seperate call for roots - loop through them and build - need .type and new views??(was trying to avoid dependency) (hacky presolution would be to prefix uuids with 000000root and 00000uroot)
             //so perhaps just do a sting comp loop here to identify end of uroots
-            letree = recurBuild(data.rows[0],data.rows,0,db);
+            letree = recurBuild(data.rows[data.rows.length-1],data.rows,0,db);//IMPORTANT 1 or 0 for now
             return callback(null,letree);
         }
         else
