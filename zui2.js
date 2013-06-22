@@ -616,88 +616,49 @@ function init() {
     //need this code to evaluate every yslide
     //d3.select(thisIsNotForDOM).selectAll("div").each(function(d,i){return; var ifvisibleandforeachdepth,slide accordingly to context;})
 
-
+//uaw raynos/class-list
     function IORedraw() {
-        asdf = d3.select(thisIsNotForDOM).selectAll("div").data(thedata = treeNav.nodes(kernel.root) /*thedata*/ , function(d) {
-            return d.id
-        })
-        asdf.enter()
-            .append("div")
-            .attr("id", function(d) {
-                return "gid" + d.id;
-            })
-            .attr("class", function(d, i) {
-                return "element" + (d.isGhost ? " ghost" + d.ghostType : "")
-            })
-            .attr("style", function(d, i) {
-                thedata[i].element = this; //this stuff shouldn't really be *here* but oh well
-                var object = new THREE.CSS3DObject(this);
-                object.position.x = Math.random() * 4000 - 2000;
-                object.position.y = Math.random() * 4000 - 2000;
-                object.position.z = Math.random() * 4000 - 2000;
-                object.owningNode = thedata[i];
+      //console.log(treeNav.nodes(kernel.root))
+      treeNav.nodes(kernel.root).forEach(function(row,i){
+        var rowClick = (function(){return function(){click(row)}}())
+        var newEl = h('div.element' + (row.isGhost ? ".ghost" + row.ghostType : "")+"#gid"+row.id,generateHTML(row),
+          {style:
+            {
+             "overflow":"hidden",
+            "text-align":"left",
+            "position":"absolute" 
+            },
+        onclick: function (e){
+          rowClick()
+        }})
+        var newObj = new THREE.CSS3DObject(newEl)
+        row.element = newEl
+        row.object = newObj 
+        newObj.position.x = Math.random() * 4000 - 2000;
+        newObj.position.y = Math.random() * 4000 - 2000;
+        newObj.position.z = Math.random() * 4000 - 2000;
+        newObj.owningNode = thedata[i];
+        scene.add(newObj)
+        objects.push(newObj)
 
-                //or object.scale.set(1,1,1)
-                object.scale.x = 1
-                object.scale.y = 1
-                object.scale.z = 1
-                thedata[i].object = object;
-                scene.add(object);
+//        createEditor({container: document.querySelector('#editorid'+row.id)})
 
-                objects.push(object);
-
-                ////height = d.dx * ky * 0.95;
-                //width = kx/10//d.dy * kx;
-                //return 'width:'+ width  +'px;'+//tempwidth=... return tempwidth > 0 ? tempwidth : 0;// 'background-color:rgba(0,127,127,' + /*( Math.random() * 0.5 + 0.25 )  '0.25' + ');' +
-                //    'height:'+ width / 1.618 +'px;'+
-                return 'overflow:hidden;text-align:left;position:absolute;'; //absolute?!?! christ that's silly
-            })
-            .on("click", function(d) {
-                click(d);
-                //reflow(d)//.d3parent);    
-            })
-            .call(generateNodeHTML)
-        asdf.transition().call(function(d, i) {
-            console.log(d);
-        });
-        asdf.exit().call(function(d, i) {
-            return;
-        }).remove();
+                                                            
+      })
     }
     IORedraw();
-
-
-    function generateNodeHTML(selection) {
-      console.log(selection)
-        selection
-            .append("div")
-            .attr("id", function(d) {
-                  return "ngid" + d.id;
-                  })
-            .attr("class", "symbol")
-            .html(function(d, i) {
-                return thedata[i].doc.func && (nn = beautify(thedata[i].doc.func.toString(),{indent_size:2}),nn)//.title;
-            })
-            .attr("class", function(d, i){
-              console.log(document.getElementById('ngid'+d.id))
-//              var editor = createEditor({container: document.querySelector('#ngid'+d.id)})
-              //editor.setValue("asdfasfasfafaf")
-              return "symbol"
-            })//*/
-        
-        selection[0][1].appendChild(h('div#ngid12',"asdfasfaf"))    
-        console.log(document.getElementById('#ngid'+12))
-        return
-/*        selection
-            .append("div")
-            .attr("class", "details")
-            .html(function(d, i) {
-                return thedata[i].id;
-            });*/
-
-        //put in a template to add controls on the nodes//not controls, just info!!!
-        //info bar along the bottom
+    
+    function generateHTML (row){
+      return h('div.symbol#ngid'+row.id,
+              h('div.symboltitle',row.id),
+              row.doc.func && beautify(row.doc.func.toString(),{indent_size:2}),
+              h('div#editorid'+row.id)
+          )
+      //somewhere else Object.keys(kernel.docIDToNode).forEach(function(rowid){createEditor({container: document.querySelector('#editorid'+rowid)})})
     }
+
+        //^put in a template to add controls on the nodes//not controls, just info!!!
+        //info bar along the bottom
 
     renderer = new THREE.CSS3DRenderer();
     renderer.setSize(winnerWidth(), winnerHeight());
@@ -2252,4 +2213,5 @@ kernel.loadDoc || kernel.loadTemp("max", false, function(err, response) {
     animate()
     return //window.init()
 });
+
 //init()
