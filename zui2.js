@@ -6,6 +6,8 @@ var d3 = require('d3')
 var TWEEN = require('tween')
 var DAGDoc = pith.DAGDoc
 var key = require('keymaster')
+var beautify = require('js-beautify').js_beautify
+var createEditor = require('javascript-editor')
 //:%!xclip -sel clip
 //u
 //being able to get information customers is important, without taking advantage of confidentiality challenge)
@@ -13,11 +15,17 @@ var A = new DAGDoc()
 window.A = A
 window.selObj = selObj
 var testTree = A.addJSONAtom({
-  title:"asfasfdasfd",
+  title:"asfasfdasf243243d",
   children:[
     {
-      title:"aaasaaaa",
-      children:[{title:"me",children:[]},{title:"too",children:[]}]
+      title:"aaasaaaadsaada",
+      func: function (x) {
+            x++
+    --x
+        return x*x
+            
+      },
+      children:[{title:"me",children:[],func:function(a,b){return a+b}},{title:"too",children:[],func:function(abc){return abc}}]
     }
   ]
 })
@@ -39,6 +47,8 @@ var inputs = {}
 
 //  //no scrolling!   //It's much nicer to just resize the textarea to fit
 //  // beefy zui.js --live --open --debug=false -- --fast --noparse=three.min.js
+//  beefy zui2.js --live --open --debug=false -- --fast --noparse=three.min.js & cd ../ReMapmessingwith; crud-file-server 
+//
 //  var flipcounter = require('flip-counter');
 //
 //  var div = document.createElement('div');
@@ -658,20 +668,32 @@ function init() {
 
 
     function generateNodeHTML(selection) {
-
+      console.log(selection)
         selection
             .append("div")
+            .attr("id", function(d) {
+                  return "ngid" + d.id;
+                  })
             .attr("class", "symbol")
             .html(function(d, i) {
-                return thedata[i].doc.title;
+                return thedata[i].doc.func && (nn = beautify(thedata[i].doc.func.toString(),{indent_size:2}),nn)//.title;
             })
+            .attr("class", function(d, i){
+              console.log(document.getElementById('ngid'+d.id))
+//              var editor = createEditor({container: document.querySelector('#ngid'+d.id)})
+              //editor.setValue("asdfasfasfafaf")
+              return "symbol"
+            })//*/
+        
+        selection[0][1].appendChild(h('div#ngid12',"asdfasfaf"))    
+        console.log(document.getElementById('#ngid'+12))
         return
-        selection
+/*        selection
             .append("div")
             .attr("class", "details")
             .html(function(d, i) {
                 return thedata[i].id;
-            });
+            });*/
 
         //put in a template to add controls on the nodes//not controls, just info!!!
         //info bar along the bottom
