@@ -14,18 +14,21 @@ var createEditor = require('javascript-editor')
 var A = new DAGDoc()
 window.A = A
 window.selObj = selObj
+var ioo = o()
+ioo(function(x){console.log(x)})
+A.on('add',ioo)
 var testTree = A.addJSONAtom({
   title:"asfasfdasf243243d",
   children:[
     {
       title:"aaasaaaadsaada",
       func: function (x) {
-            x++
-    --x
+            x = 11(x)
+    x = 12(x)
         return x*x
-            
       },
-      children:[{title:"me",children:[],func:function(a,b){return a+b}},{title:"too",children:[],func:function(abc){return abc}}]
+    children:[{title:"me2",children:[],func:function(a,b){return a*2+b}},{title:"me",children:[],func:function(a,b){return a+b}},{title:"too",children:[],func:function(abc){return abc}}]
+ 
     }
   ]
 })
@@ -646,8 +649,8 @@ function init() {
                                                             
       })
     }
-    IORedraw();
-    
+//    IORedraw();
+    ioo(IORedraw)    
     function generateHTML (row){
       return h('div.symbol#ngid'+row.id,
               h('div.symboltitle',row.id),

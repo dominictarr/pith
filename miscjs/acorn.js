@@ -87,6 +87,7 @@ module.exports = function($,couchr,async,events,db){
       var fakeRows = []
       Object.keys(doc.rows).map(function(key){fakeRows.push(doc.rows[key]);doc.rows[key].doc = doc.rows[key].state;/*doc.rows[key].doc.content.children = doc.rows[key].state.children || []*/})
       doc.rows = fakeRows//.forEach = fakeRows.forEach
+      doc.rows[doc.rows.length-1].parent = doc.rows[doc.rows.length-1]
       thistree.buildTree(calcTagged = true, doc, thistree.url, nestSubtrees, function(err,response){
         if(!err)
           thistree.root = response;
