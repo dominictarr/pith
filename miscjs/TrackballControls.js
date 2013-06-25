@@ -1,10 +1,11 @@
 /**
  * @author Eberhard Graether / http://egraether.com/
  */
+module.exports = function (THREE, window){
+//var domElement = window.document
+THREE.TrackballControls = function ( object, domElement ) {
 
-TTHREE.TrackballControls = function ( object, domElement ) {
-
-	THREE.EventTarget.call( this );
+//	THREE.EventTarget.call( this );
 
 	var _this = this;
 	var STATE = { NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2 };
@@ -454,4 +455,6 @@ TTHREE.TrackballControls = function ( object, domElement ) {
 
 	this.handleResize();
 
+  THREE.TrackballControls.prototype = Object.create( THREE.EventDispatcher.prototype );
 };
+}
