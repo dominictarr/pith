@@ -2,7 +2,20 @@ var pith = require('./index.js')
 var h = require('hyperscript')
 var o = require('observable') //or subsume into pith.o
 var THREE = require('css3drenderer')
-var d3 = require('d3')
+//var d3 = require('d3')
+var d3 = {layout:{},rebind:d3_rebindfunc}
+function d3_rebindfunc (target, source) {
+  function d3_rebind (target, source, method) {
+    return function() {
+      var value = method.apply(source, arguments);
+      return value === source ? target : value;
+    }
+  }
+  var i = 1, n = arguments.length, method;
+  while (++i < n) target[method = arguments[i]] = d3_rebind(target, source, source[method]);
+  return target;
+}
+
 var TWEEN = require('tween')
 var DAGDoc = pith.DAGDoc
 var key = require('keymaster')
