@@ -2,7 +2,6 @@ var pith = require('./index.js')
 var h = require('hyperscript')
 var o = require('observable') //or subsume into pith.o
 var THREE = require('css3drenderer')
-//var d3 = require('d3')
 var d3 = {layout:{},rebind:d3_rebindfunc}
 function d3_rebindfunc (target, source) {
   function d3_rebind (target, source, method) {
@@ -85,17 +84,13 @@ var zen
 
         function position(node, x, dx, dy, y) { //added parameter y
             var d3children = node.d3children;
-            node.x = x;
-            node.y = y + dy; //changed
-            node.dx = dx;
-            node.dy = dy * .5;
-            targetPosition = new THREE.Vector3();
+//            targetPosition = new THREE.Vector3();
             zoffset = 10000; //actual offset    
-            targetPosition.set(-zoffset, 0, 0)
-            targetScale = new THREE.Vector3();
-            targetScale.set(1, 1, 1)
-            targetRotation = new THREE.Vector3();
-            targetRotation.set(0, 0, 0)
+//            targetPosition.set(-zoffset, 0, 0)
+//            targetScale = new THREE.Vector3();
+//            targetScale.set(1, 1, 1)
+//            targetRotation = new THREE.Vector3();
+//            targetRotation.set(0, 0, 0)
             node.localDepth = null;
 
             if (node.target) {
@@ -103,12 +98,12 @@ var zen
                 node.target.position.x = -10000
                 node.target.position.z = 10000
             }
-            node.target = {
+/*            node.target = {
                 "position": targetPosition,
                 "rotation": targetRotation,
                 "scale": targetScale,
                 "visible": false
-            };
+            };*/
             node.activeLocal = false;
 
             if ((!theLocalRoot) && (node == params.localRoot))
@@ -623,9 +618,21 @@ function init() {
         }) //can lose the function(d) i think :)
     .params(treeNavParams);
     kernel.root.d3parent = kernel.root.parent;
+    Object.keys(kernel.docIDToNode).forEach(function(key){
+      var t = {
+        "position": new THREE.Vector3,
+        "rotation": new THREE.Vector3,
+        "scale": new THREE.Vector3,
+        "visible": false
+      }
+      kernel.docIDToNode[key].target = t
+      t.position.set(-10000, 0, 0)
+      t.scale.set(1, 1, 1)
+      t.rotation.set(0, 0, 0)
+    })
     thedata = treeNav.nodes(kernel.root)
 
-    thisIsNotForDOM = document.createElement('div');
+//    thisIsNotForDOM = document.createElement('div');
     //need this code to evaluate every transform2
     //d3.select(thisIsNotForDOM).selectAll("div").each(function(d,i){return; var togglevisibilityhere;})
 
