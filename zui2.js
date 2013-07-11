@@ -61,13 +61,6 @@ var inputs = {}
 //      value: 3
 //      })
 
-var zen
-
-
-
-
-var zen2
-
 //i need a fullscreen page sliding thing, just like those presentation libraries, with text view and markdown text edit (and then RTE) - i'm appealing to developers first!!!
 //with those really simple indicators along the sides
 //and you can trivially upload attachments and reference them
