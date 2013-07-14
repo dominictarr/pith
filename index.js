@@ -9,8 +9,10 @@ var deepMerge = require("deep-merge")
 require('sha-lite')
 var hashLib = function(str){return str.sha256()}
 var hash = function(obj){obj.id = ""+ hashLib(JSON.stringify(obj)+(obj.func/*&&typeoffunc*/?obj.func.toString():''));/*console.log("vvv");console.log(obj);*/return obj}
+//below hashes for testing
 var fakehashcounter = 10
-//var hash = function(obj){obj.id = ""+fakehashcounter++;return obj}
+var hash = function(obj){obj.id = ""+fakehashcounter++;return obj}
+var hash = function(obj){obj.id = ""+ hashLib(JSON.stringify(obj)+Math.random()+(obj.func/*&&typeoffunc*/?obj.func.toString():''));/*console.log("vvv");console.log(obj);*/return obj}
 
 function createId () {//should probably do something cleverer e.g. timestamp+atomicRootId+uuid
   return [1,1,1].map(function () {

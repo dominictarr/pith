@@ -1048,7 +1048,7 @@ module.exports = function(THREE, window){
 
 
 
-        this.domElement.addEventListener('mousedown', mousedown, false);
+/*        this.domElement.addEventListener('mousedown', mousedown, false);
 
 
 
@@ -1068,7 +1068,7 @@ module.exports = function(THREE, window){
 
         window.addEventListener('keydown', keydown, false);
 
-        window.addEventListener('keyup', keyup, false);
+        window.addEventListener('keyup', keyup, false);*/
 
 
 
