@@ -8,7 +8,7 @@ var addDAGobj = {
   func: function foldtestparent (v) {
     foldavg(foldpif(v,function(x){return x%2}),5)
       (function (){console.log(arguments[0]+" is the average of the following squares:\n["+observe('foldavg/fpoaold')()+"]")})
-    fib(v)(function(){console.log(arguments[0]+" is next in the fib sequence")})
+//    fib(v)(function(){console.log(arguments[0]+" is next in the fib sequence")})
   },
   children:[
     {
