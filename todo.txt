@@ -1,0 +1,21 @@
+no for loops, only recursion
+-
+An easy way is whenever you want to change a property, just create a new object with the new details and pass that one along, instead
+-
+The way to do this is to send a   communication which has the message along with the   address of another Actor called the customer along with   the message. The recipient could then cause a response   message to be sent to the customer.
+-
+in response to a message it receives, can concurrently:   send messages to addresses of Actors that it has;   create new Actors;   designate how to handle the next message it receives.
+-
+https://github.com/substack/js-traverse
+-
+https://github.com/Raynos/continuable
+-
+continuable for connected signal trees to io, such as monadic operations, the lispy stuff
+-
+concatenative programming language: Any subexpression can be replaced with a name that represents the same subexpression. This is referred to in the concatenative community as factoring and is used extensively to simplify programs into smaller parts.
+-
+listen for updates to nested indexes
+-
+Another example of common direct manipulation would be clicking on a data item (say a text based address) which then turns into an editable field.
+-
+printing,searching,updating,viewing,delegating,computing
