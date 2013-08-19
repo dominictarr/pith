@@ -1,5 +1,25 @@
 {
+  "name": "pith",
+  "version": "0.0.0",
+  "author": "Jeremy Taylor <jez0990@gmail.com> (http://jdt.me/)",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jez0990/pith.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jez0990/pith/issues"
+  },
   "dependencies": {
     "css3drenderer": "0.0.0"
-  }
+  },
+  "devDependencies": {
+    "beefy": "0.4",
+    "crud-file-server":"0.4.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "beefy zui3.js --live --open --debug=false -- --fast --noparse=three.min.js & crud-file-server",
+  },
+  "license": "BSD"
 }
